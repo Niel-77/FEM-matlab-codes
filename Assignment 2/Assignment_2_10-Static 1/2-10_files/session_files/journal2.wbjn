@@ -1,0 +1,55 @@
+# encoding: utf-8
+# 2023 R2
+SetScriptVersion(Version="23.2.142")
+system1 = GetSystem(Name="SYS")
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Aluminium 10")
+material1.Delete()
+material2 = engineeringData1.GetMaterial(Name="Structural Steel")
+material2.Delete()
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Update(AllDependencies=True)
+template1 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+system2 = template1.CreateSystem()
+geometry1 = system2.GetContainer(ComponentName="Geometry")
+geometry1.SetFile(FilePath=GetAbsoluteUserPathName("8th sem/Finite Element Method/MATLAB/Assignment/Assignment_2_10.SLDPRT"))
+library1 = EngData.OpenLibrary(
+    Name="General_Materials",
+    Source=ANSYS::Disk::General_Materials.xml)
+engineeringData2 = system2.GetContainer(ComponentName="Engineering Data")
+matl1 = engineeringData2.CreateMaterial(Name="a")
+matl1.Delete()
+matl2 = engineeringData2.CreateMaterial(Name="alumin")
+matl2.Delete()
+library2 = EngData.OpenLibrary(
+    Name="General_Materials",
+    Source=ANSYS::Disk::General_Materials.xml)
+library3 = EngData.OpenLibrary(
+    Name="General_Materials",
+    Source=ANSYS::Disk::General_Materials.xml)
+matl3 = engineeringData2.ImportMaterial(
+    Name="Aluminum Alloy",
+    Source="General_Materials.xml")
+material3 = engineeringData2.GetMaterial(Name="Structural Steel")
+material3.Delete()
+modelComponent2 = system2.GetComponent(Name="Model")
+modelComponent2.Refresh()
+model2 = system2.GetContainer(ComponentName="Model")
+model2.Edit()
+model2.Exit()
+system1.Delete()
+modelComponent2.Refresh()
+setupComponent1 = system2.GetComponent(Name="Setup")
+setupComponent1.Refresh()
+solutionComponent1 = system2.GetComponent(Name="Solution")
+solutionComponent1.Refresh()
+resultsComponent1 = system2.GetComponent(Name="Results")
+resultsComponent1.Refresh()
+results1 = system2.GetContainer(ComponentName="Results")
+results1.Edit()
+model2.Exit()
+Save(Overwrite=True)
